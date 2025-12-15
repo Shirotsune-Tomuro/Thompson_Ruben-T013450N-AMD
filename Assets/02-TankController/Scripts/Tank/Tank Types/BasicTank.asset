@@ -15,5 +15,5 @@ MonoBehaviour:
   TankName: Basic
   MaxHealth: 100
   Armour: 0
-  Acceleration: 30
+  Acceleration: 7
   MaxSpeed: 0
