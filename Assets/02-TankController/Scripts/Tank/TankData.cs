@@ -10,4 +10,7 @@ public class TankData : ScriptableObject
 
     public float Acceleration;
     public float MaxSpeed;
+
+    public float SuspnsionStiffeness;
+    public float SuspensionDamping;
 }

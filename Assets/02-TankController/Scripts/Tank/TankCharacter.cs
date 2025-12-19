@@ -15,6 +15,6 @@ public class TankCharacter : MonoBehaviour
 
         if (m_MovementComponent == null)
             m_MovementComponent = GetComponent<MovementComponent>();
-        m_MovementComponent.Init(m_TankData.Acceleration);
+        m_MovementComponent.Init(m_TankData.Acceleration, m_TankData.SuspnsionStiffeness, m_TankData.SuspensionDamping);
     }
 }
