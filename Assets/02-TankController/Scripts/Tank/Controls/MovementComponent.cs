@@ -9,7 +9,7 @@ public class MovementComponent : MonoBehaviour, IMove
 
     float m_Acceleration;
 
-    public void Init(float acceleration, float susK, float susC)
+    public void Init(float acceleration, float susK, float susC, float length, float wRadius)
     {
         m_Acceleration = acceleration;
 
@@ -25,7 +25,7 @@ public class MovementComponent : MonoBehaviour, IMove
 
         foreach (var driveSystem in m_DriveSystems)
         {
-            driveSystem.Init(susK, susC);
+            driveSystem.Init(susK, susC, length, wRadius);
         }
     }
 

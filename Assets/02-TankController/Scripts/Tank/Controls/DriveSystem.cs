@@ -7,7 +7,7 @@ public class DriveSystem : MonoBehaviour
     Suspension[] m_Suspension;
 
 
-    public void Init(float susK, float susC)
+    public void Init(float susK, float susC, float length, float wRadius)
     {
         m_DriveWheel = GetComponentInChildren<DriveWheel>();
         m_Suspension = GetComponentsInChildren<Suspension>();
@@ -16,7 +16,7 @@ public class DriveSystem : MonoBehaviour
 
         foreach (var suspension in m_Suspension)
         {
-            suspension.Init(susK, susC);
+            suspension.Init(susK, susC, length, wRadius);
         }
     }
     public void Accellerate(float Acceleration)

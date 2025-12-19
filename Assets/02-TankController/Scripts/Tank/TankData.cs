@@ -13,4 +13,6 @@ public class TankData : ScriptableObject
 
     public float SuspnsionStiffeness;
     public float SuspensionDamping;
+    public float SpringLength;
+    public float WheelRadius;
 }
