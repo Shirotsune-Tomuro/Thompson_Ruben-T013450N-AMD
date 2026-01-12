@@ -6,6 +6,7 @@ public class Suspension : MonoBehaviour
     // suspension variables
     private Rigidbody m_Rigidbody;
     private Transform m_Wheel;
+    private Transform m_SpringLoc;
     private Vector3 m_RestPos;
 
     private float m_Stiffness = 1.0f;
@@ -21,12 +22,15 @@ public class Suspension : MonoBehaviour
     {
         m_Rigidbody = GetComponentInParent<Rigidbody>();
         m_Wheel = transform.GetChild(0);
-        m_RestPos = transform.localPosition;
+        m_SpringLoc = transform.GetChild(1);
+        m_RestPos = m_Wheel.transform.localPosition;
 
         m_SpringLength = length;
         m_Stiffness = k;
         m_Damping = c;
         m_WheelRadius = wRadius;
+
+        SuspensionPhysics();
     }
 
     public void Move(bool shouldMove)
@@ -50,8 +54,7 @@ public class Suspension : MonoBehaviour
                 m_IsGrounded = true;
             else
                 m_IsGrounded = false;
-            Debug.DrawRay(transform.position, -transform.up * 0.5f, m_IsGrounded ? Color.green : Color.red);
-
+            Debug.DrawRay(m_SpringLoc.transform.position, -transform.up * m_SpringLength, m_IsGrounded ? Color.green : Color.red);
 
             yield return new WaitForFixedUpdate();
         }
@@ -62,26 +65,26 @@ public class Suspension : MonoBehaviour
         // hookes law F = -kx
         // hookes law with damping F = -kx - cv
 
-        Debug.DrawLine(transform.position, m_RestPos);
-
-        Vector3 pos = transform.position;
-        Vector3 dir = -transform.up;
+        //readability
+        Vector3 pos = m_SpringLoc.transform.position;
+        Vector3 dir = -m_SpringLoc.transform.up;
 
         RaycastHit hit;
         bool hasHit = Physics.Raycast(pos, dir, out hit, m_SpringLength);
 
+        //if hit = false then dist = springlength 
+        //else dist = hit.distance
         float dist = (!hasHit) ? (m_SpringLength) : (hit.distance);
-        m_Wheel.position = pos + dir * dist;
+        Vector3 poss = m_Wheel.position;
+        poss.y = pos.y + dir.y * dist;
+        m_Wheel.position = poss;
 
         float SpringLenPercent = Mathf.Clamp01(1.0f - (dist / m_SpringLength));
         float compressPercent = 1 - SpringLenPercent;
+        float wheelPosOnSpring = m_SpringLength * (1 - compressPercent);
+        m_Wheel.position = transform.position - transform.up * (wheelPosOnSpring - m_WheelRadius);
 
-        Debug.Log("Compress Percent: " + compressPercent);
-
-        float wheelPosOnSpring = m_SpringLength * (1 - compressPercent) * -m_WheelRadius;
-        Vector3 newWheelPos = m_Wheel.position - m_Wheel.transform.up * wheelPosOnSpring;
-        m_Wheel.localPosition = m_Wheel.InverseTransformPoint(newWheelPos);
-
+        //if the spring is compressed, claculate suspension force
         if (compressPercent > 0)
         {
             float displacement = compressPercent * m_SpringLength;
@@ -91,14 +94,14 @@ public class Suspension : MonoBehaviour
             float k = m_Stiffness;
             float c = m_Damping;
 
-            float force = (-k * x) - (c * susVelocity);
+            float force = -(k * x) - (c * susVelocity);
             Vector3 susForce = -m_Wheel.transform.up * force;
             m_Rigidbody.AddForceAtPosition(susForce, m_Wheel.position, ForceMode.Acceleration);
         }
 
-        Vector3 localPos = transform.localPosition;
-        localPos.Scale(Vector3.right);
-        transform.localPosition = localPos;
+        //Vector3 localPos = transform.localPosition;
+        //localPos.Scale(Vector3.right);
+        //transform.localPosition = localPos;
     }
 
     private void FixedUpdate()
@@ -106,6 +109,4 @@ public class Suspension : MonoBehaviour
         if (m_IsGrounded)
             SuspensionPhysics();
     }
-
-
 }

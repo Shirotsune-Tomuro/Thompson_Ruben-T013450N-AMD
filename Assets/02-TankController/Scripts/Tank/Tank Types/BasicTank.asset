@@ -18,6 +18,6 @@ MonoBehaviour:
   Acceleration: 7
   MaxSpeed: 0
   SuspnsionStiffeness: 1
-  SuspensionDamping: 0.5
+  SuspensionDamping: 0.2
   SpringLength: 1
-  WheelRadius: 0.5
+  WheelRadius: 0.25
