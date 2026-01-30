@@ -17,7 +17,7 @@ MonoBehaviour:
   Armour: 0
   Acceleration: 7
   MaxSpeed: 0
-  SuspnsionStiffeness: 1
-  SuspensionDamping: 0.2
-  SpringLength: 1
+  SuspnsionStiffeness: 5
+  SuspensionDamping: 1
+  SpringLength: 0.75
   WheelRadius: 0.25

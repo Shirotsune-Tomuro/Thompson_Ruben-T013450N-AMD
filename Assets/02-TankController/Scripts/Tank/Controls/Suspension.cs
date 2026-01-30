@@ -29,8 +29,6 @@ public class Suspension : MonoBehaviour
         m_Stiffness = k;
         m_Damping = c;
         m_WheelRadius = wRadius;
-
-        SuspensionPhysics();
     }
 
     public void Move(bool shouldMove)
@@ -64,6 +62,11 @@ public class Suspension : MonoBehaviour
     {
         // hookes law F = -kx
         // hookes law with damping F = -kx - cv
+        //F is the total force applied by the spring
+        //k is the spring constant (stiffness)
+        //x is the displacement from the rest position
+        //c is the damping coefficient
+        //v is the velocity of the mass relative to the spring
 
         //readability
         Vector3 pos = m_SpringLoc.transform.position;
@@ -79,24 +82,28 @@ public class Suspension : MonoBehaviour
         poss.y = pos.y + dir.y * dist;
         m_Wheel.position = poss;
 
-        float SpringLenPercent = Mathf.Clamp01(1.0f - (dist / m_SpringLength));
+        float SpringLenPercent = Mathf.Clamp01(dist / m_SpringLength);
         float compressPercent = 1 - SpringLenPercent;
-        float wheelPosOnSpring = m_SpringLength * (1 - compressPercent);
-        m_Wheel.position = transform.position - transform.up * (wheelPosOnSpring - m_WheelRadius);
+        poss = transform.position - transform.up * (SpringLenPercent);
+        poss.y += m_WheelRadius;
+        m_Wheel.position = poss;
 
         //if the spring is compressed, claculate suspension force
         if (compressPercent > 0)
         {
-            float displacement = compressPercent * m_SpringLength;
-            float susVelocity = Vector3.Dot(-m_Wheel.transform.up, m_Rigidbody.GetPointVelocity(m_Wheel.position));
+            float displacement = Vector3.Dot((pos - m_RestPos), dir);
+            float susVelocity = Vector3.Dot(m_Rigidbody.GetPointVelocity(m_Wheel.position), dir);
 
             float x = displacement;
             float k = m_Stiffness;
             float c = m_Damping;
 
-            float force = -(k * x) - (c * susVelocity);
-            Vector3 susForce = -m_Wheel.transform.up * force;
-            m_Rigidbody.AddForceAtPosition(susForce, m_Wheel.position, ForceMode.Acceleration);
+            float force = (-k * x) - (c * susVelocity);
+            Vector3 susForce = dir * force;
+
+            Debug.Log("Suspension Force: " + force);
+
+            m_Rigidbody.AddForceAtPosition(-susForce, m_Wheel.position, ForceMode.Acceleration);
         }
 
         //Vector3 localPos = transform.localPosition;
