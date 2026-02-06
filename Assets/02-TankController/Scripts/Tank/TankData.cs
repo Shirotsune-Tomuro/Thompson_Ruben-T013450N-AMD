@@ -16,4 +16,6 @@ public class TankData : ScriptableObject
     public float SpringLength;
     public float WheelRadius;
 
+    public float TurretRotationSpeed;
+
 }

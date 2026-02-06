@@ -110,7 +110,6 @@ public class Suspension : MonoBehaviour
 
     private void FixedUpdate()
     {
-       // if (m_IsGrounded)
-            SuspensionPhysics();
+        SuspensionPhysics();
     }
 }

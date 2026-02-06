@@ -27,7 +27,7 @@ public class DriveWheel : MonoBehaviour
 
     public void StopMove()
     {
-        m_Accel = 0f;
+        m_Accel = 0;
 
         if (c_Move != null)
         {
