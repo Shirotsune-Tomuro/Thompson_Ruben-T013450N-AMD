@@ -69,51 +69,48 @@ public class Suspension : MonoBehaviour
         //v is the velocity of the mass relative to the spring
 
         //readability
-        Vector3 pos = m_SpringLoc.transform.position;
-        Vector3 dir = -m_SpringLoc.transform.up;
+        Vector3 springWorldPos = m_SpringLoc.transform.position;
+        Vector3 springDown = -m_SpringLoc.transform.up;
+        Vector3 springUp = m_SpringLoc.transform.up;
 
         RaycastHit hit;
-        bool hasHit = Physics.Raycast(pos, dir, out hit, m_SpringLength);
+        bool hasHit = Physics.Raycast(springWorldPos, springDown, out hit, m_SpringLength);
 
         //if hit = false then dist = springlength 
         //else dist = hit.distance
         float dist = (!hasHit) ? (m_SpringLength) : (hit.distance);
-        Vector3 poss = m_Wheel.position;
-        poss.y = pos.y + dir.y * dist;
-        m_Wheel.position = poss;
 
+        //calculate how much the spring is compressed
         float SpringLenPercent = Mathf.Clamp01(dist / m_SpringLength);
-        float compressPercent = 1 - SpringLenPercent;
-        poss = (transform.position - transform.up) * SpringLenPercent;
-        poss.y -= m_WheelRadius;
-        m_Wheel.position = poss;
+        float compressPercent = 1.0f - SpringLenPercent;
+
+        //move the wheel down with the spring
+        Vector3 wheelWorldPos = m_Wheel.position;
+        wheelWorldPos = springWorldPos + (springDown * dist) + (springUp * m_WheelRadius);
+        m_Wheel.position = wheelWorldPos;
 
         //if the spring is compressed, calculate suspension force
         if (compressPercent > 0.0f)
         {
-            float displacement = Vector3.Dot((pos - m_RestPos), dir);
-            float susVelocity = Vector3.Dot(m_Rigidbody.GetPointVelocity(m_Wheel.position), dir);
+            float displacement = m_SpringLength - dist;
+            float susVelocity = Vector3.Dot(m_Rigidbody.GetPointVelocity(m_Wheel.position), springUp);
 
             float x = displacement;
             float k = m_Stiffness;
             float c = m_Damping;
 
-            float force = (-k * x) - (c * susVelocity);
-            Vector3 susForce = dir * force;
+            float force = (k * x) - (c * susVelocity);
+            Vector3 susForce = springUp * force;
 
             Debug.Log("Suspension Force: " + force);
 
-            m_Rigidbody.AddForceAtPosition(-susForce, m_Wheel.position, ForceMode.Acceleration);
+            m_Rigidbody.AddForceAtPosition(susForce, m_Wheel.position, ForceMode.Acceleration);
         }
-
-        //Vector3 localPos = transform.localPosition;
-        //localPos.Scale(Vector3.right);
-        //transform.localPosition = localPos;
     }
 
     private void FixedUpdate()
     {
-        if (m_IsGrounded)
+       // if (m_IsGrounded)
             SuspensionPhysics();
     }
 }

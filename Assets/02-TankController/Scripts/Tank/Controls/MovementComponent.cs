@@ -42,7 +42,7 @@ public class MovementComponent : MonoBehaviour, IMove
 
     public void Steer(float value)
     {
-        float turnStrength = 1.45f;
+        float turnStrength = 0.25f;
 
         m_LDrive.Accellerate(value * (m_Acceleration * turnStrength));
         m_RDrive.Accellerate(-value * (m_Acceleration * turnStrength));
