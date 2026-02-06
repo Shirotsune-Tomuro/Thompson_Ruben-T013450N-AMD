@@ -15,9 +15,10 @@ MonoBehaviour:
   TankName: Basic
   MaxHealth: 100
   Armour: 0
-  Acceleration: 7
+  Acceleration: 1
   MaxSpeed: 0
-  SuspnsionStiffeness: 5
-  SuspensionDamping: 7
-  SpringLength: 0.75
-  WheelRadius: 0.5
+  SuspnsionStiffeness: 27
+  SuspensionDamping: 5
+  SpringLength: 1
+  WheelRadius: 0.25
+  TurretRotationSpeed: 14

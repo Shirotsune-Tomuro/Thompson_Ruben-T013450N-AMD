@@ -2593,6 +2593,7 @@ GameObject:
   - component: {fileID: 1013742092}
   - component: {fileID: 1013742095}
   - component: {fileID: 1013742094}
+  - component: {fileID: 1013742096}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Untagged
@@ -2669,6 +2670,19 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1013742091}
   m_Mesh: {fileID: 4300012, guid: a248095cd7ac3014189fd07ba1a73b6b, type: 3}
+--- !u!114 &1013742096
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1013742091}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 945986f680a9eec429e33f7c0a72b814, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Camera: {fileID: 880163268}
 --- !u!1 &1017359241
 GameObject:
   m_ObjectHideFlags: 0
