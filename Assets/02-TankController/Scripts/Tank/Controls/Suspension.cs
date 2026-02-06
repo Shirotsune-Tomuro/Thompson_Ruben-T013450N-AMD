@@ -84,12 +84,12 @@ public class Suspension : MonoBehaviour
 
         float SpringLenPercent = Mathf.Clamp01(dist / m_SpringLength);
         float compressPercent = 1 - SpringLenPercent;
-        poss = transform.position - transform.up * (SpringLenPercent);
-        poss.y += m_WheelRadius;
+        poss = (transform.position - transform.up) * SpringLenPercent;
+        poss.y -= m_WheelRadius;
         m_Wheel.position = poss;
 
-        //if the spring is compressed, claculate suspension force
-        if (compressPercent > 0)
+        //if the spring is compressed, calculate suspension force
+        if (compressPercent > 0.0f)
         {
             float displacement = Vector3.Dot((pos - m_RestPos), dir);
             float susVelocity = Vector3.Dot(m_Rigidbody.GetPointVelocity(m_Wheel.position), dir);
